@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3a1550">
+<title>Para Paula 💜</title>
+<style>
+  :root{
+    --violet-deep:#3a1550;
+    --violet-mid:#6b3fa0;
+    --violet-light:#c9a7f0;
+    --petal:#a259d9;
+    --petal-2:#e0aaff;
+    --gold:#ffd97a;
+    --leaf:#3f6b4e;
+  }
+
+  *{box-sizing:border-box;}
+
+  html,body{
+    margin:0;
+    padding:0;
+    height:100%;
+    width:100%;
+    overflow-x:hidden;
+  }
+
+  body{
+    min-height:100vh;
+    min-height:100dvh;
+    background:radial-gradient(ellipse at top, #5a2a7a 0%, #3a1550 45%, #23093a 100%);
+    font-family:Georgia, 'Times New Roman', serif;
+    color:#fdf6ff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+  }
+
+  /* estrellas de fondo */
+  .stars{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+  }
+  .star{
+    position:absolute;
+    width:2px;
+    height:2px;
+    background:#fff;
+    border-radius:50%;
+    opacity:.6;
+    animation:twinkle 3s ease-in-out infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{opacity:.15;}
+    50%{opacity:.85;}
+  }
+
+  /* petalos cayendo */
+  .petals{
+    position:fixed;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    overflow:hidden;
+  }
+  .petal-fall{
+    position:absolute;
+    top:-5vh;
+    width:14px;
+    height:14px;
+    background:linear-gradient(135deg,var(--petal-2),var(--petal));
+    border-radius:0 50% 50% 50%;
+    opacity:.85;
+    animation-name:fall, sway;
+    animation-timing-function:linear, ease-in-out;
+    animation-iteration-count:infinite, infinite;
+  }
+  @keyframes fall{
+    to{ transform: translateY(115vh) rotate(340deg); }
+  }
+  @keyframes sway{
+    0%,100%{ margin-left:0; }
+    50%{ margin-left:30px; }
+  }
+
+  .wrap{
+    position:relative;
+    z-index:2;
+    width:100%;
+    max-width:480px;
+    padding:32px 20px 48px;
+    text-align:center;
+  }
+
+  .kicker{
+    letter-spacing:2px;
+    text-transform:uppercase;
+    font-size:12px;
+    color:var(--violet-light);
+    font-family:Verdana, sans-serif;
+    margin-bottom:6px;
+    opacity:.85;
+  }
+
+  h1{
+    font-size:26px;
+    font-weight:normal;
+    margin:0 0 4px;
+    color:#fff;
+    text-shadow:0 0 18px rgba(200,150,255,.5);
+  }
+
+  .subtitle{
+    font-style:italic;
+    color:var(--violet-light);
+    font-size:15px;
+    margin:0 0 28px;
+  }
+
+  /* boton flor */
+  .flower-btn{
+    background:none;
+    border:none;
+    cursor:pointer;
+    padding:0;
+    width:180px;
+    height:180px;
+    margin:0 auto;
+    display:block;
+    position:relative;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  .flower-glow{
+    position:absolute;
+    inset:0;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(200,140,255,.45) 0%, rgba(200,140,255,0) 70%);
+    animation:pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ transform:scale(.85); opacity:.6; }
+    50%{ transform:scale(1.05); opacity:1; }
+  }
+
+  .flower-btn svg{
+    position:relative;
+    width:100%;
+    height:100%;
+    transform-origin:center;
+    filter:drop-shadow(0 6px 18px rgba(0,0,0,.35));
+    transition:transform .5s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  .flower-btn.active svg{
+    animation:bloom .7s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes bloom{
+    0%{ transform:scale(1) rotate(0deg); }
+    45%{ transform:scale(1.28) rotate(8deg); }
+    100%{ transform:scale(1) rotate(0deg); }
+  }
+
+  .petal-shape{
+    transform-origin:100px 100px;
+  }
+
+  .hint{
+    margin-top:16px;
+    font-size:14px;
+    color:var(--violet-light);
+    font-family:Verdana, sans-serif;
+    opacity:.9;
+    transition:opacity .4s ease;
+  }
+  .hint.hidden{ opacity:0; height:0; margin:0; overflow:hidden; }
+
+  /* burst */
+  .burst-piece{
+    position:fixed;
+    left:50%;
+    top:50%;
+    font-size:18px;
+    pointer-events:none;
+    z-index:5;
+    animation:burst 1s ease-out forwards;
+  }
+  @keyframes burst{
+    to{
+      transform:translate(var(--dx), var(--dy)) scale(.4) rotate(180deg);
+      opacity:0;
+    }
+  }
+
+  /* tarjeta mensaje */
+  .card{
+    display:none;
+    margin-top:26px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.18);
+    backdrop-filter:blur(6px);
+    border-radius:18px;
+    padding:26px 22px;
+    opacity:0;
+    transform:translateY(18px);
+    transition:opacity .7s ease, transform .7s ease;
+    box-shadow:0 10px 40px rgba(0,0,0,.25);
+  }
+  .card.show{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  .card h2{
+    margin:0 0 14px;
+    font-size:20px;
+    font-weight:normal;
+    color:var(--gold);
+  }
+
+  .card p{
+    font-size:16px;
+    line-height:1.7;
+    margin:0 0 12px;
+    color:#fdf6ff;
+  }
+
+  .divider{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:16px 0 18px;
+    font-size:13px;
+    color:var(--violet-light);
+    opacity:.85;
+  }
+  .divider span{
+    flex:1;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--violet-light), transparent);
+    opacity:.5;
+  }
+
+  .closing{
+    font-size:18px;
+    font-weight:bold;
+    color:var(--gold);
+    margin:18px 0 0 !important;
+  }
+
+  .signature{
+    margin-top:16px;
+    font-style:italic;
+    color:var(--violet-light);
+    font-size:14px;
+  }
+
+  .replay{
+    margin-top:22px;
+    background:transparent;
+    border:1px solid var(--violet-light);
+    color:var(--violet-light);
+    padding:9px 18px;
+    border-radius:999px;
+    font-family:Verdana, sans-serif;
+    font-size:12px;
+    letter-spacing:1px;
+    cursor:pointer;
+    display:none;
+  }
+  .replay.show{ display:inline-block; }
+  .replay:active{ transform:scale(.96); }
+
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="petals" id="petals"></div>
+
+<div class="wrap">
+  <div class="kicker">un pequeño regalo</div>
+  <h1>Para la niña consentida</h1>
+  <div class="subtitle">🌸 Violeta de los Alpes 🌸</div>
+
+  <button class="flower-btn" id="flowerBtn" aria-label="Toca la flor para abrir la sorpresa">
+    <span class="flower-glow"></span>
+    <svg viewBox="0 0 200 200">
+      <defs>
+        <linearGradient id="petalGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stop-color="#7a3fb0"/>
+          <stop offset="100%" stop-color="#e6b8ff"/>
+        </linearGradient>
+        <radialGradient id="centerGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff3c4"/>
+          <stop offset="100%" stop-color="#ffd97a"/>
+        </radialGradient>
+      </defs>
+
+      <!-- tallo -->
+      <path d="M100,120 C95,150 95,175 100,195" stroke="#3f6b4e" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <!-- hojas -->
+      <path d="M100,165 C80,160 65,170 62,185 C82,190 96,182 100,165 Z" fill="#3f6b4e"/>
+      <path d="M100,178 C118,172 132,180 136,194 C118,198 104,192 100,178 Z" fill="#4d7f5e"/>
+
+      <!-- petalos -->
+      <g class="petal-shape" transform="rotate(0 100 100)">
+        <path d="M100,100 Q78,65 100,15 Q122,65 100,100 Z" fill="url(#petalGrad)" opacity="0.95"/>
+      </g>
+      <g class="petal-shape" transform="rotate(72 100 100)">
+        <path d="M100,100 Q78,65 100,15 Q122,65 100,100 Z" fill="url(#petalGrad)" opacity="0.95"/>
+      </g>
+      <g class="petal-shape" transform="rotate(144 100 100)">
+        <path d="M100,100 Q78,65 100,15 Q122,65 100,100 Z" fill="url(#petalGrad)" opacity="0.95"/>
+      </g>
+      <g class="petal-shape" transform="rotate(216 100 100)">
+        <path d="M100,100 Q78,65 100,15 Q122,65 100,100 Z" fill="url(#petalGrad)" opacity="0.95"/>
+      </g>
+      <g class="petal-shape" transform="rotate(288 100 100)">
+        <path d="M100,100 Q78,65 100,15 Q122,65 100,100 Z" fill="url(#petalGrad)" opacity="0.95"/>
+      </g>
+
+      <!-- centro -->
+      <circle cx="100" cy="100" r="10" fill="url(#centerGrad)"/>
+    </svg>
+  </button>
+
+  <div class="hint" id="hint">✨ Toca la flor ✨</div>
+
+  <div class="card" id="card">
+    <h2>Para Paula 🌸</h2>
+    <p>Entre tantas flores del mundo, elegiste la Violeta de los Alpes como tu favorita, y hoy quise que fuera ella quien hablara por mí.</p>
+    <div class="divider"><span></span>🌸<span></span></div>
+    <p>Así como esta flor logra brillar incluso en los lugares más fríos, tú también logras iluminar todo a tu alrededor sin siquiera intentarlo.</p>
+    <p>Y siii... sé que entregarte esta flor por aquí no es lo mismo que entregartela en tus manos, y espero que ese momento llegue... Pero quiero que sepas, lo mucho que significas para mí en tan poco tiempo y las ganas que tengo de verte sonreír.</p>
+    <p>Por ahora, que esta flor te recuerde lo especial que eres para mí.</p>
+    <p class="closing">Te quiero. 💜</p>
+    <div class="signature">— Jose</div>
+  </div>
+
+  <button class="replay" id="replayBtn">Volver a ver</button>
+</div>
+
+<script>
+  // estrellas
+  const starsBox = document.getElementById('stars');
+  const STAR_COUNT = 45;
+  for(let i=0;i<STAR_COUNT;i++){
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random()*100 + 'vw';
+    s.style.top = Math.random()*100 + 'vh';
+    s.style.animationDelay = (Math.random()*3) + 's';
+    starsBox.appendChild(s);
+  }
+
+  // petalos cayendo de fondo
+  const petalsBox = document.getElementById('petals');
+  const PETAL_COUNT = 16;
+  for(let i=0;i<PETAL_COUNT;i++){
+    const p = document.createElement('div');
+    p.className = 'petal-fall';
+    p.style.left = Math.random()*100 + 'vw';
+    const duration = 7 + Math.random()*7;
+    const swayDuration = 2 + Math.random()*2;
+    p.style.animationDuration = duration + 's, ' + swayDuration + 's';
+    p.style.animationDelay = (Math.random()*8) + 's, 0s';
+    p.style.opacity = 0.5 + Math.random()*0.4;
+    const scale = 0.6 + Math.random()*0.8;
+    p.style.transform = 'scale(' + scale + ')';
+    petalsBox.appendChild(p);
+  }
+
+  // interaccion flor
+  const flowerBtn = document.getElementById('flowerBtn');
+  const hint = document.getElementById('hint');
+  const card = document.getElementById('card');
+  const replayBtn = document.getElementById('replayBtn');
+  let opened = false;
+
+  function burst(){
+    const emojis = ['🌸','💜','✨'];
+    for(let i=0;i<14;i++){
+      const piece = document.createElement('span');
+      piece.className = 'burst-piece';
+      piece.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      const angle = Math.random()*Math.PI*2;
+      const dist = 90 + Math.random()*140;
+      piece.style.setProperty('--dx', Math.cos(angle)*dist + 'px');
+      piece.style.setProperty('--dy', Math.sin(angle)*dist + 'px');
+      document.body.appendChild(piece);
+      setTimeout(()=> piece.remove(), 1050);
+    }
+  }
+
+  function openCard(){
+    if(opened) return;
+    opened = true;
+    flowerBtn.classList.add('active');
+    burst();
+    hint.classList.add('hidden');
+    setTimeout(()=>{
+      card.style.display = 'block';
+      requestAnimationFrame(()=>{
+        card.classList.add('show');
+      });
+      replayBtn.classList.add('show');
+    }, 350);
+  }
+
+  function resetCard(){
+    opened = false;
+    flowerBtn.classList.remove('active');
+    card.classList.remove('show');
+    card.style.display = 'none';
+    replayBtn.classList.remove('show');
+    hint.classList.remove('hidden');
+  }
+
+  flowerBtn.addEventListener('click', openCard);
+  replayBtn.addEventListener('click', resetCard);
+</script>
+
+</body>
+</html>
