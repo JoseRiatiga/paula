@@ -189,6 +189,19 @@
     font-style:italic;
     opacity:.7;
   }
+
+  .entry-disabled{
+    cursor:default;
+    opacity:.55;
+  }
+  .entry-disabled:hover, .entry-disabled:focus-visible{
+    transform:none;
+    background:rgba(255,255,255,.06);
+    border-color:rgba(255,255,255,.18);
+  }
+  .entry-disabled .entry-title{
+    text-decoration:line-through;
+  }
 </style>
 </head>
 <body>
@@ -218,12 +231,11 @@
       </a>
     </li>
     <li>
-      <a class="entry" href="paginas/Quieres_ser_mi_novia.html">
+      <div class="entry entry-disabled">
         <div class="entry-date">5 de septiembre, 2026</div>
         <div class="entry-title">¿Quieres ser mi novia? 💜</div>
-        <p class="entry-desc">Una pregunta que llevo guardando.</p>
-        <span class="entry-arrow">Abrir →</span>
-      </a>
+        <p class="entry-desc">Todavía no es el momento.</p>
+      </div>
     </li>
     <li>
       <div class="coming-soon">✨ Aquí irán apareciendo más sorpresas...</div>
