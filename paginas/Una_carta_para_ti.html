@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3a1550">
+<title>Para Paula 💌</title>
+<style>
+  :root{
+    --violet-deep:#3a1550;
+    --violet-mid:#6b3fa0;
+    --violet-light:#c9a7f0;
+    --petal:#a259d9;
+    --petal-2:#e0aaff;
+    --gold:#ffd97a;
+    --leaf:#3f6b4e;
+  }
+
+  *{box-sizing:border-box;}
+
+  html,body{
+    margin:0;
+    padding:0;
+    height:100%;
+    width:100%;
+    overflow-x:hidden;
+  }
+
+  body{
+    min-height:100vh;
+    min-height:100dvh;
+    background:radial-gradient(ellipse at top, #5a2a7a 0%, #3a1550 45%, #23093a 100%);
+    font-family:Georgia, 'Times New Roman', serif;
+    color:#fdf6ff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+  }
+
+  .stars{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+  }
+  .star{
+    position:absolute;
+    width:2px;
+    height:2px;
+    background:#fff;
+    border-radius:50%;
+    opacity:.6;
+    animation:twinkle 3s ease-in-out infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{opacity:.15;}
+    50%{opacity:.85;}
+  }
+
+  .petals{
+    position:fixed;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    overflow:hidden;
+  }
+  .petal-fall{
+    position:absolute;
+    top:-5vh;
+    width:14px;
+    height:14px;
+    background:linear-gradient(135deg,var(--petal-2),var(--petal));
+    border-radius:0 50% 50% 50%;
+    opacity:.85;
+    animation-name:fall, sway;
+    animation-timing-function:linear, ease-in-out;
+    animation-iteration-count:infinite, infinite;
+  }
+  @keyframes fall{
+    to{ transform: translateY(115vh) rotate(340deg); }
+  }
+  @keyframes sway{
+    0%,100%{ margin-left:0; }
+    50%{ margin-left:30px; }
+  }
+
+  .wrap{
+    position:relative;
+    z-index:2;
+    width:100%;
+    max-width:480px;
+    padding:32px 20px 48px;
+    text-align:center;
+  }
+
+  .kicker{
+    letter-spacing:2px;
+    text-transform:uppercase;
+    font-size:12px;
+    color:var(--violet-light);
+    font-family:Verdana, sans-serif;
+    margin-bottom:6px;
+    opacity:.85;
+  }
+
+  h1{
+    font-size:26px;
+    font-weight:normal;
+    margin:0 0 28px;
+    color:#fff;
+    text-shadow:0 0 18px rgba(200,150,255,.5);
+  }
+
+  /* boton sobre */
+  .envelope-btn{
+    background:none;
+    border:none;
+    cursor:pointer;
+    padding:0;
+    width:220px;
+    height:154px;
+    margin:0 auto;
+    display:block;
+    position:relative;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  .envelope-glow{
+    position:absolute;
+    inset:0;
+    border-radius:24px;
+    background:radial-gradient(circle, rgba(200,140,255,.45) 0%, rgba(200,140,255,0) 70%);
+    animation:pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ transform:scale(.85); opacity:.6; }
+    50%{ transform:scale(1.05); opacity:1; }
+  }
+
+  .envelope-btn svg{
+    position:relative;
+    width:100%;
+    height:100%;
+    transform-origin:center;
+    filter:drop-shadow(0 6px 18px rgba(0,0,0,.35));
+    transition:transform .5s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  .envelope-btn.active svg{
+    animation:bloom .7s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes bloom{
+    0%{ transform:scale(1) rotate(0deg); }
+    45%{ transform:scale(1.22) rotate(-4deg); }
+    100%{ transform:scale(1) rotate(0deg); }
+  }
+
+  .hint{
+    margin-top:16px;
+    font-size:14px;
+    color:var(--violet-light);
+    font-family:Verdana, sans-serif;
+    opacity:.9;
+    transition:opacity .4s ease;
+  }
+  .hint.hidden{ opacity:0; height:0; margin:0; overflow:hidden; }
+
+  .burst-piece{
+    position:fixed;
+    left:50%;
+    top:50%;
+    font-size:18px;
+    pointer-events:none;
+    z-index:5;
+    animation:burst 1s ease-out forwards;
+  }
+  @keyframes burst{
+    to{
+      transform:translate(var(--dx), var(--dy)) scale(.4) rotate(180deg);
+      opacity:0;
+    }
+  }
+
+  .card{
+    display:none;
+    margin-top:26px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.18);
+    backdrop-filter:blur(6px);
+    border-radius:18px;
+    padding:26px 22px;
+    opacity:0;
+    transform:translateY(18px);
+    transition:opacity .7s ease, transform .7s ease;
+    box-shadow:0 10px 40px rgba(0,0,0,.25);
+  }
+  .card.show{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  .card h2{
+    margin:0 0 14px;
+    font-size:20px;
+    font-weight:normal;
+    color:var(--gold);
+  }
+
+  .card p{
+    font-size:16px;
+    line-height:1.7;
+    margin:0 0 12px;
+    color:#fdf6ff;
+    text-align:left;
+  }
+
+  .closing{
+    font-size:18px;
+    font-weight:bold;
+    color:var(--gold);
+    margin:18px 0 0 !important;
+    text-align:center !important;
+  }
+
+  .signature{
+    margin-top:16px;
+    font-style:italic;
+    color:var(--violet-light);
+    font-size:14px;
+  }
+
+  .replay{
+    margin-top:22px;
+    background:transparent;
+    border:1px solid var(--violet-light);
+    color:var(--violet-light);
+    padding:9px 18px;
+    border-radius:999px;
+    font-family:Verdana, sans-serif;
+    font-size:12px;
+    letter-spacing:1px;
+    cursor:pointer;
+    display:none;
+  }
+  .replay.show{ display:inline-block; }
+  .replay:active{ transform:scale(.96); }
+
+  .back-link{
+    display:inline-block;
+    margin-top:28px;
+    font-family:Verdana, sans-serif;
+    font-size:12px;
+    letter-spacing:1px;
+    color:var(--violet-light);
+    text-decoration:none;
+    opacity:.75;
+  }
+  .back-link:hover{ opacity:1; }
+
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="petals" id="petals"></div>
+
+<div class="wrap">
+  <div class="kicker">una carta para ti</div>
+  <h1>Antes de que sigas leyendo...</h1>
+
+  <button class="envelope-btn" id="envBtn" aria-label="Toca el sobre para abrir la carta">
+    <span class="envelope-glow"></span>
+    <svg viewBox="0 0 200 140">
+      <defs>
+        <linearGradient id="envGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#e6b8ff"/>
+          <stop offset="100%" stop-color="#7a3fb0"/>
+        </linearGradient>
+        <linearGradient id="flapGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#c9a7f0"/>
+          <stop offset="100%" stop-color="#6b3fa0"/>
+        </linearGradient>
+        <radialGradient id="sealGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff3c4"/>
+          <stop offset="100%" stop-color="#ffd97a"/>
+        </radialGradient>
+      </defs>
+
+      <rect x="10" y="25" width="180" height="100" rx="10" fill="url(#envGrad)"/>
+      <path d="M10,25 L100,85 L190,25 Z" fill="url(#flapGrad)"/>
+      <circle cx="100" cy="52" r="15" fill="url(#sealGrad)"/>
+      <text x="100" y="58" text-anchor="middle" font-size="16">🌸</text>
+    </svg>
+  </button>
+
+  <div class="hint" id="hint">💌 Toca el sobre 💌</div>
+
+  <div class="card" id="card">
+    <h2>Para ti, Paula 💌</h2>
+    <p>Hay cosas que se sienten mejor escritas que dichas, así que aquí va: quería decirte, sin adornos ni apuros, lo bien que se siente tenerte cerca.</p>
+    <p>Me gusta cómo te ríes de la nada, cómo defiendes lo que piensas, y cómo logras que hasta los días más comunes terminen siendo de los que uno recuerda.</p>
+    <p>No te prometo perfección, pero sí te prometo intención: la de seguir conociéndote, de cuidar lo que estamos construyendo, y de estar ahí, sin condiciones, en lo bueno y en lo no tan bueno.</p>
+    <p>Gracias por dejarme ser parte de tu historia, aunque sea todavía en un capítulo pequeño.</p>
+    <p class="closing">Con todo mi cariño. 💜</p>
+    <div class="signature">— Jose</div>
+  </div>
+
+  <button class="replay" id="replayBtn">Volver a ver</button>
+
+  <a class="back-link" href="../index.html">← Volver al inicio</a>
+</div>
+
+<script>
+  const starsBox = document.getElementById('stars');
+  const STAR_COUNT = 45;
+  for(let i=0;i<STAR_COUNT;i++){
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random()*100 + 'vw';
+    s.style.top = Math.random()*100 + 'vh';
+    s.style.animationDelay = (Math.random()*3) + 's';
+    starsBox.appendChild(s);
+  }
+
+  const petalsBox = document.getElementById('petals');
+  const PETAL_COUNT = 16;
+  for(let i=0;i<PETAL_COUNT;i++){
+    const p = document.createElement('div');
+    p.className = 'petal-fall';
+    p.style.left = Math.random()*100 + 'vw';
+    const duration = 7 + Math.random()*7;
+    const swayDuration = 2 + Math.random()*2;
+    p.style.animationDuration = duration + 's, ' + swayDuration + 's';
+    p.style.animationDelay = (Math.random()*8) + 's, 0s';
+    p.style.opacity = 0.5 + Math.random()*0.4;
+    const scale = 0.6 + Math.random()*0.8;
+    p.style.transform = 'scale(' + scale + ')';
+    petalsBox.appendChild(p);
+  }
+
+  const envBtn = document.getElementById('envBtn');
+  const hint = document.getElementById('hint');
+  const card = document.getElementById('card');
+  const replayBtn = document.getElementById('replayBtn');
+  let opened = false;
+
+  function burst(){
+    const emojis = ['💌','💜','✨'];
+    for(let i=0;i<14;i++){
+      const piece = document.createElement('span');
+      piece.className = 'burst-piece';
+      piece.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      const angle = Math.random()*Math.PI*2;
+      const dist = 90 + Math.random()*140;
+      piece.style.setProperty('--dx', Math.cos(angle)*dist + 'px');
+      piece.style.setProperty('--dy', Math.sin(angle)*dist + 'px');
+      document.body.appendChild(piece);
+      setTimeout(()=> piece.remove(), 1050);
+    }
+  }
+
+  function openCard(){
+    if(opened) return;
+    opened = true;
+    envBtn.classList.add('active');
+    burst();
+    hint.classList.add('hidden');
+    setTimeout(()=>{
+      card.style.display = 'block';
+      requestAnimationFrame(()=>{
+        card.classList.add('show');
+      });
+      replayBtn.classList.add('show');
+    }, 350);
+  }
+
+  function resetCard(){
+    opened = false;
+    envBtn.classList.remove('active');
+    card.classList.remove('show');
+    card.style.display = 'none';
+    replayBtn.classList.remove('show');
+    hint.classList.remove('hidden');
+  }
+
+  envBtn.addEventListener('click', openCard);
+  replayBtn.addEventListener('click', resetCard);
+</script>
+
+</body>
+</html>
